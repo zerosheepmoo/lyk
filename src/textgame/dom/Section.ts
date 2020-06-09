@@ -3,6 +3,8 @@
 | 2020. 06. 09. created by zerosheepmoo  |
 ******************************************/
 
-export class Section {
+import { DOMBase } from "./DOMBase";
+
+export class Section extends DOMBase {
     
 }
