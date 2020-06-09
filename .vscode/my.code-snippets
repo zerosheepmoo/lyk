@@ -1,0 +1,14 @@
+{
+	"comment_description": {
+		"scope": "javascript, typescript",
+		"prefix": "comment_description",
+		"body": [
+			"/*****************************************",
+            "| $TM_FILENAME                            ",
+            "| $CURRENT_YEAR. $CURRENT_MONTH. $CURRENT_DATE. created by zerosheepmoo  |",
+            "******************************************/",
+            ""
+		],
+		"description": "file description"
+	},
+} 
