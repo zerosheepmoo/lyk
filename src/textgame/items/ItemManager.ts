@@ -99,9 +99,9 @@ export class ItemManager {
      * 아이템 갯수를 더하거나 뺀다
      * 
      * @param nameOrCode - 이름 또는 코드
-     * @param count - 추가할 아이템 갯수, -를 입력하면 제거
+     * @param count - 추가할 아이템 갯수, 음수를 입력하면 제거
      */
-    calculateItem(nameOrCode: string | number, count: number) {
+    addItemNumber(nameOrCode: string | number, count: number) {
         let code: number;
         if (typeof nameOrCode === 'string') {
             code = Number(this._set.getItemCode(nameOrCode));

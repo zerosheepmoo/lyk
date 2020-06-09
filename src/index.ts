@@ -9,7 +9,7 @@ import { TextGame } from "./textgame/Game";
 /**
  * 메인 클래스
  */
-export class LKY {
+export class LYK {
     /**
      * 안녕!
      */
@@ -25,7 +25,7 @@ export class LKY {
         return new Chang(canvas);
     }
 
-    static createTextGame() {
-        return new TextGame();
+    static createTextGame(div: HTMLDivElement) {
+        return new TextGame(div);
     }
 }
