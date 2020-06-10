@@ -19,5 +19,13 @@
  * ```
  */
 export interface IStory {
-
+    /**
+     * 스토리 이름
+     */
+    name: string;
+    
+    /**
+     * 스토리 내용
+     */
+    text: string;
 }

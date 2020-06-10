@@ -24,4 +24,9 @@ export interface IChoice {
      * 이 선택지가 끝 선택지인지의 여부
      */
     end: boolean;
+
+    /**
+     * 선택지 명
+     */
+    name: string;
 }

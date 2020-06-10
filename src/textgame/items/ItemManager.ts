@@ -101,17 +101,10 @@ export class ItemManager {
      * @param nameOrCode - 이름 또는 코드
      * @param count - 추가할 아이템 갯수, 음수를 입력하면 제거
      */
-    addItemNumber(nameOrCode: string | number, count: number) {
-        let code: number;
-        if (typeof nameOrCode === 'string') {
-            code = Number(this._set.getItemCode(nameOrCode));
-        }
-        else {
-            code = nameOrCode;
-        }
-
+    addItemNumber(code: number, count: number) {
         if(this._list[code]) {
             this._list[code].count += count;
+            return this._list[code].count;
         }
         else {
             throw Error('There is no such item!');
