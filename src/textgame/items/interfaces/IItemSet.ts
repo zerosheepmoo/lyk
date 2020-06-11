@@ -24,5 +24,5 @@ import { IItem } from "./IItem";
  * ```
  */
 export interface IItemSet {
-    [code: number]: IItem
+    [code: number]: IItem;
 }

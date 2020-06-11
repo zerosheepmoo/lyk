@@ -91,6 +91,7 @@ export class Section extends DOMBase {
         const len = this._childs.length;
         for (let i = len -1; i > 0; i--) {
             this._childs[i].clear();
+            this.dom.removeChild(this._childs[i].dom);
             this._childs.splice(i, 1);
         }
     }

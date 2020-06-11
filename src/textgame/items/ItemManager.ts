@@ -47,15 +47,6 @@ export class ItemManager {
     }
 
     /**
-     * 아이템 프리셋을 등록한다.
-     * 
-     * @param value - 입력을 위한 아이템 셋
-     */
-    registerSet(value: IItemSet) {
-        this._set.registerPreset(value);
-    }
-
-    /**
      * 아이템 프리셋을 추가 등록한다.
      * 
      * @param value - 입력을 위한 아이템 셋
@@ -93,6 +84,10 @@ export class ItemManager {
             const item = this._createItem(Number(code), preset[code]);
             this._list[code] = item;
         }
+    }
+
+    getItem(code: number) {
+        return this._list[code];
     }
 
     /**

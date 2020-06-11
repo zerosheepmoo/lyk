@@ -18,4 +18,11 @@ export class TextGame {
     constructor(div: HTMLDivElement) {
         this._controller = new Controller(div);
     }
+
+    /**
+     * 컨트롤러
+     */
+    get controller() {
+        return this._controller;
+    }
 }

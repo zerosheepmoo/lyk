@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Black+Han+Sans:400');
+@import url('https://fonts.googleapis.com/css?family=Black+Han+Sans&display=swap&subset=korean');
+
 .lyk-main {
     background-color: #AAAAAA;
     width: 50vw;
@@ -5,9 +8,16 @@
 }
 
 .lyk-item {
-
+    font-family: 'Black Han Sans', sans-serif;
+    background-color: cornsilk;
+    padding: 2px;
+    border: 1px solid black;
+    box-shadow: 2px 2px gray;;
 }
 
 .lyk-item-container {
-
+    width: calc(100% -2px);
+    height: 30%;
+    border: gainsboro 1px solid;
+    background-color: lightcyan;
 }

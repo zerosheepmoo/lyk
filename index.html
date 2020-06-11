@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test</title>
     <link rel='stylesheet' href='./style.css'>
+    <link href="https://fonts.googleapis.com/css?family=Black+Han+Sans&display=swap&subset=korean" rel="stylesheet">
     <script src="./dist/main.js"></script>
-    <script>
-        let tg, im;
-        document.addEventListener('DOMContentLoaded', function (){
-            let tgContainer = document.getElementById('text-game');
-            tg = LYK.createTextGame(tgContainer);
-            im = tg.itemManager;
-        })
-    </script>
+    <script src='./example.js'></script>
 </head>
 <body>
     <h1>Test!</h1>
-    <div id='text-game'></div>
+    <div id='test'></div>
+    <div id='text-game' ></div>
     <canvas id='app' width="300" height="300"></canvas>
 </body>
 </html>

@@ -2,7 +2,7 @@
   "name": "lyk",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main.ts",
   "scripts": {
     "dev": "webpack-dev-server",
     "build": "webpack",
