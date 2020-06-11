@@ -73,8 +73,10 @@ export class ItemManager {
      * @param value - 아이템 타입 맵
      */
     setItemMap(value: ItemTypeMap) {
-        this._clear();
-        this._map = value;
+        if(value) {
+            this._clear();
+            this._map = value;
+        }
     }
 
     /**

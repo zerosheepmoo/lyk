@@ -10,15 +10,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function example() {
     console.log('You can test Here!');
+    createButton('현재 타입 맵 확인', exportTypeMap);
     createButton('타입 맵 바꾸기', mapChange);
+}
+
+function exportTypeMap() {
+    alert(JSON.stringify(con.exportItemTypeMap()));
+    console.log(con._itemManager._set.preset);
+    console.log(con._itemManager._list);
 }
 
 function mapChange() {
     if (prevTypeMap) {
-        
+        let map = con.exportItemTypeMap();
+        con.setItemTypeMap(prevTypeMap);
+        prevTypeMap = map;
     }
     else {
-        prevTypeMap = con.exportItemTypeMap;
+        prevTypeMap = con.exportItemTypeMap();
+        const map = {
+            consume: false,
+            equip: false,
+            special: false,
+            story: false,
+            another: false
+        }
+        con.setItemTypeMap(map);
     }
 }
 

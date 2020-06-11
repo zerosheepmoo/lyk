@@ -9,6 +9,7 @@ import { StatusMananger } from "../stats/StatusManager";
 import { SignExp, InnerExp, ExpParser } from "../utils/Parser";
 import { SectionType } from "../Type";
 import { IItemSet } from "../items/interfaces/IItemSet";
+import { ItemTypeMap } from "../items/interfaces/ItemTypeMap";
 
 /**
  * 컨트롤러 클래스
@@ -72,8 +73,7 @@ export class Controller {
      * 
      * @remarks
      * 등록한 프리셋만이 게임에서 데이터로 쓰인다.
-     * 게임 진행 도중에 특별히 프리셋이 바뀌었을 경우 화면에 강제로 렌더링을 해야
-     * 바뀐 아이템들이 표시된다.
+     * 게임 제작 진행 도중에 특별히 프리셋이 바뀌었을 경우 화면에 강제로 렌더링을 해야 바뀐 아이템들이 표시된다.
      * 
      * @param set - 아이템 프리셋
      */
@@ -88,6 +88,19 @@ export class Controller {
         return this._itemManager.exportTypeMap();
     }
 
+    /**
+     * 아이템 타입 맵을 등록한다.
+     * 
+     * @remarks
+     * 등록한 맵 만이 게임에서 데이터로 사용된다.
+     * 맵이 새로 등록되면 자동으로 아이템 셋과 리스트는 초기화 된다.
+     * 
+     * @param value - 아이템 타입 맵
+     */
+    setItemTypeMap(value: ItemTypeMap){
+        this._itemManager.setItemMap(value);
+    }
+    
     /**
      * 아이템 갯수를 더하거나 뺀다.
      * 
