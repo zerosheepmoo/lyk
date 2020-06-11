@@ -33,9 +33,22 @@ export class Controller {
         this._gameView = new MainView(div, 'lyk-main');
     }
 
-
     // ANCHOR items
-    
+
+    /**
+     * 현재 등록된 프리셋을 반환한다.
+     */
+    exportItemPreset() {
+        return this._itemManager.exportPreset();
+    }
+
+    /**
+     * 현재 등록된 타입 맵을 반환한다.
+     */
+    exportItemTypeMap() {
+        return this._itemManager.exportTypeMap();
+    }
+
     /**
      * 아이템 프리셋을 등록한다.
      * 
@@ -74,14 +87,16 @@ export class Controller {
      * 아이템 목록을 강제로 렌더링한다.
      * 
      */
-    renderView(section: SectionType) {
+    renderItemView(section: SectionType) {
         // 아이템 목록 초기화
         this._gameView.itemTab.removeAllChilds();
         const itemList = this._itemManager.itemList;
         for (let code in itemList) {
             const name = itemList[code].name;
             const count = itemList[code].count;
-            this._setItemInnerHTML(name, Number(code), count);
+            if (count) {
+                this._setItemInnerHTML(name, Number(code), count);
+            }
         }
     }
 

@@ -9,6 +9,7 @@ import { IItem } from "./interfaces/IItem";
 import { IItemSet } from "./interfaces/IItemSet";
 import { ItemTypeMap } from "./interfaces/ItemTypeMap";
 import { DefaultItemMap, FantasyItems } from "../Preset";
+import { clone } from "../utils/util";
 
 /**
  * 아이템 매니저 클래스
@@ -113,6 +114,21 @@ export class ItemManager {
      */
     registerPreset(set: IItemSet) {
         this._set.registerPreset(set);
+        this.initItems();
+    }
+
+    /**
+     * 현재 등록된 프리셋을 반환한다.
+     */
+    exportPreset() {
+        return clone(this._set.preset, true);
+    }
+
+    /**
+     * 현재 등록된 타입 맵을 반환한다.
+     */
+    exportTypeMap() {
+        return clone(this._map, true);
     }
 
     ////////// ANCHOR: inner Method //////////

@@ -87,12 +87,15 @@ export class Section extends DOMBase {
     /**
      * 모든 자식들 제거
      */
-    removeAllChilds() {
+    removeAllChilds(render: boolean = false) {
         const len = this._childs.length;
-        for (let i = len -1; i > 0; i--) {
+        for (let i = len -1; i > -1; i--) {
             this._childs[i].clear();
             this.dom.removeChild(this._childs[i].dom);
             this._childs.splice(i, 1);
+        }
+        if (render) {
+            this._render();
         }
     }
 
