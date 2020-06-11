@@ -5,7 +5,7 @@
 
 import { IItemSet } from "./interfaces/IItemSet";
 import { IItemType } from "./interfaces/IItemType";
-import { copyObj } from "../utils/util";
+import { copyObj } from "../utils/Util";
 
 /**
  * 아이템 목록 저장 및 탐색 클래스

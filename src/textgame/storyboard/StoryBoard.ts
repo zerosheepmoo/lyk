@@ -8,7 +8,7 @@ import { Choice } from "./Choice";
 import { IStory } from "./interfaces/IStory";
 import { IChoice } from "./interfaces/IChoice";
 import { Flow } from "./Flow";
-import { clone } from "../utils/util";
+import { clone } from "../utils/Util";
 
 /**
  * 스토리 보드 클래스

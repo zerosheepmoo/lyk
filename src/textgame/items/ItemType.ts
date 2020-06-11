@@ -4,7 +4,7 @@
 ******************************************/
 
 import { ItemTypeMap } from "./interfaces/ItemTypeMap";
-import { copyObj } from "../utils/util";
+import { copyObj } from "../utils/Util";
 
 /**
  * 아이템 종류 결정자 클래스

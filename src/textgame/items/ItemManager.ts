@@ -9,7 +9,7 @@ import { IItem } from "./interfaces/IItem";
 import { IItemSet } from "./interfaces/IItemSet";
 import { ItemTypeMap } from "./interfaces/ItemTypeMap";
 import { DefaultItemMap, FantasyItems } from "../Preset";
-import { clone } from "../utils/util";
+import { clone } from "../utils/Util";
 
 /**
  * 아이템 매니저 클래스
