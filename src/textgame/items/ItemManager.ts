@@ -54,6 +54,7 @@ export class ItemManager {
      */
     addSet(value: IItemSet) {
         this._set.addItems(value);
+        this.initItems();
     }
 
     /**
@@ -63,6 +64,7 @@ export class ItemManager {
      */
     removeItemFromSet(codeOrNames: (string | number) | (string | number)[]){
         this._set.removeItems(codeOrNames);
+        this.initItems();
     }
 
     /**
@@ -87,6 +89,10 @@ export class ItemManager {
         }
     }
 
+    /**
+     * 아이템 가져오기
+     * @param code - 코드
+     */
     getItem(code: number) {
         return this._list[code];
     }

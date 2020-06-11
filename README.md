@@ -22,6 +22,10 @@ npm run dev
 
 ### 사용
 
-`index.html` 에 스크립트로 포함시켜서 진행할 수 있다.
-`example.js` 를 참조
+- `index.html` 에 스크립트로 포함시켜서 진행할 수 있다.
+- `example.js` 를 참조
 
+### 테스트
+
+- `/examples` 에 html 파일과 js 파일을 만들어 테스트한다.
+- 만약 `/examples/item-map.html` 에 접근하고 싶다면, npm run dev 후 `http://localhost:9011/examples/item-map.html` 로 들어가면된다.

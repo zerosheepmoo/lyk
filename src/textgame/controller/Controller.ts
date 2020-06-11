@@ -43,10 +43,28 @@ export class Controller {
     }
 
     /**
-     * 현재 등록된 타입 맵을 반환한다.
+     * 아이템 프리셋에 아이템 프리셋을 추가한다.
+     * 
+     * @remarks
+     * 코드가 겹치면 덮어쓰기 된다.
+     * 
+     * @param value - 추가할 아이템 프리셋
      */
-    exportItemTypeMap() {
-        return this._itemManager.exportTypeMap();
+    addItemPreset(value: IItemSet) {
+        this._itemManager.addSet(value);
+    }
+
+    /**
+     * 아이템 프리셋에서 아이템을 제거한다.
+     * 
+     * @remarks
+     * 하나 또는 여러개를 제거 할수 있다.
+     * 여러 개를 제거할 때에는 매개변수에 배열형태로 준다.
+     * 
+     * @param codeOrNames - 코드 또는 이름, 혹은 코드들 또는 이름들;
+     */
+    removeItemFromPreset(codeOrNames: (string | number) | (string | number)[]) {
+        this._itemManager.removeItemFromSet(codeOrNames)
     }
 
     /**
@@ -61,6 +79,13 @@ export class Controller {
      */
     registerItemSet(set: IItemSet) {
         this._itemManager.registerPreset(set);
+    }
+
+    /**
+     * 현재 등록된 타입 맵을 반환한다.
+     */
+    exportItemTypeMap() {
+        return this._itemManager.exportTypeMap();
     }
 
     /**

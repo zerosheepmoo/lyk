@@ -14,8 +14,15 @@ export class ItemTypes {
     private _isUnique: boolean;
     private _itemTypes: ItemTypeMap;
 
-    constructor(content: ItemTypeMap) {
-        this._itemTypes = copyObj(content);
+    constructor(content: ItemTypeMap | string) {
+        if (typeof content === 'string') {
+            this._itemTypes = {}
+            this._itemTypes[content] = true;
+            this.isUnique = true;
+        }
+        else {
+            this._itemTypes = copyObj(content);
+        }
     }
 
     /**

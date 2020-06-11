@@ -20,7 +20,7 @@ export class Item {
     private _maxCount: number = 3;
     private _minCount: number = 0;
 
-    constructor(map: ItemTypeMap, type: IItemType, code: number, name: string, count?: number) {
+    constructor(map: ItemTypeMap | string, type: IItemType, code: number, name: string, count?: number) {
         this._types = new ItemTypes(map);
         this._parse(type);
         this._code = code;
