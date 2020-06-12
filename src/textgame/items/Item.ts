@@ -6,10 +6,11 @@
 import { IItemType } from './interfaces/IItemType';
 import { ItemTypes } from "./ItemType";
 import { ItemTypeMap } from './interfaces/ItemTypeMap';
+import { IItemOpts } from './interfaces/IItemOpts';
 
 
 /**
- * 아이템 클래스
+ * 아이템 모델 클래스
  */
 export class Item {
     private _code: number;
@@ -19,13 +20,14 @@ export class Item {
     private _count: number;
     private _maxCount: number = 3;
     private _minCount: number = 0;
+    private _isFixedCount: boolean = false;
 
-    constructor(map: ItemTypeMap | string, type: IItemType, code: number, name: string, count?: number) {
+    constructor(map: ItemTypeMap | string, type: IItemType, code: number, name: string, others: any) {
         this._types = new ItemTypes(map);
-        this._parse(type);
+        this._parseType(type);
         this._code = code;
         this._name = name;
-        this._count = count || 0;
+        this._parseOthers(others);
     }
 
     /**
@@ -108,8 +110,20 @@ export class Item {
         }
     }
 
+    /**
+     * 아이템 갯수 고정여부
+     */
+    get isFixedCount(): boolean {
+        return this._isFixedCount;
+    }
+    set isFixedCount(value: boolean) {
+        if (this._isFixedCount !== value) {
+            this._isFixedCount = value;
+        }
+    }
+
     ////////// inner Method //////////
-    private _parse(value: IItemType) {
+    private _parseType(value: IItemType) {
         const itemTypes = this._types;
         let unique;
         for (let itemType in value) {
@@ -122,6 +136,27 @@ export class Item {
         }
         if (unique) {
             itemTypes.isUnique = true;
+        }
+    }
+
+    private _parseOthers(value: IItemOpts) {
+        if (value.isFixed !== undefined) {
+            this.isFixedCount = value.isFixed;
+        }
+        
+        if(value.max !== undefined) {
+            this.maxCount = value.max;
+        }
+
+        if(value.min !== undefined) {
+            this.minCount = value.min;
+        }
+
+        if(value.start !== undefined) {
+            this.count = value.start
+        }
+        else {
+            this.count = this._minCount;
         }
     }
 }

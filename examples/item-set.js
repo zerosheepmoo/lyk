@@ -14,6 +14,12 @@ function example() {
     createButton('아이템 셋 바꾸기', regiItemSet);
     createButton('아이템 셋 추가하기', addItemSet);
     createButton('아이템 셋에서 제거하기', removeItemSet);
+    createButton('화면 렌더링', renderItems);
+
+}
+
+function renderItems() {
+    con.renderItemView();
 }
 
 function addItemSet() {
@@ -49,7 +55,9 @@ function regiItemSet() {
             },
             2: {
                 name: '레일건',
-                type: {equip: true}
+                type: {equip: true}, 
+                startCount: 1, 
+                isFixed: true
             },
             3: {
                 name: '현자의 돌', 
@@ -61,11 +69,13 @@ function regiItemSet() {
             },
             5: {
                 name: '가면', 
-                type: {equip: true}
+                type: {equip: true, consume: true}
             },
-            6: 
-                {name: '핡 식스', 
-                type: {consume: true}
+            6: {
+                name: '핡 식스', 
+                type: {consume: true}, 
+                maxCount: 4, 
+                minCount: 1
             }
         }
         prevPreset = con.exportItemPreset();

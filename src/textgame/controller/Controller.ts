@@ -10,11 +10,13 @@ import { SignExp, InnerExp, ExpParser } from "../utils/Parser";
 import { SectionType } from "../Type";
 import { IItemSet } from "../items/interfaces/IItemSet";
 import { ItemTypeMap } from "../items/interfaces/ItemTypeMap";
+import { DataManager } from "../data/DataManager";
 
 /**
  * 컨트롤러 클래스
  */
 export class Controller {
+    private _dataManager: DataManager | null;
     private _itemManager: ItemManager;
     private _statusManager: StatusMananger;
     private _gameView: MainView;
@@ -27,97 +29,74 @@ export class Controller {
     private _templates = {
         item: `{{name}}{{multiple}}{{count}}`
     }
-    
+
     constructor(div: HTMLDivElement) {
         this._itemManager = new ItemManager();
         this._statusManager = new StatusMananger();
         this._gameView = new MainView(div, 'lyk-main');
+        this.renderItemView();
     }
 
     // ANCHOR items
 
     /**
-     * 현재 등록된 프리셋을 반환한다.
-     */
-    exportItemPreset() {
-        return this._itemManager.exportPreset();
-    }
-
-    /**
-     * 아이템 프리셋에 아이템 프리셋을 추가한다.
-     * 
-     * @remarks
-     * 코드가 겹치면 덮어쓰기 된다.
-     * 
-     * @param value - 추가할 아이템 프리셋
-     */
-    addItemPreset(value: IItemSet) {
-        this._itemManager.addSet(value);
-    }
-
-    /**
-     * 아이템 프리셋에서 아이템을 제거한다.
-     * 
-     * @remarks
-     * 하나 또는 여러개를 제거 할수 있다.
-     * 여러 개를 제거할 때에는 매개변수에 배열형태로 준다.
-     * 
-     * @param codeOrNames - 코드 또는 이름, 혹은 코드들 또는 이름들;
-     */
-    removeItemFromPreset(codeOrNames: (string | number) | (string | number)[]) {
-        this._itemManager.removeItemFromSet(codeOrNames)
-    }
-
-    /**
-     * 아이템 프리셋을 등록한다.
-     * 
-     * @remarks
-     * 등록한 프리셋만이 게임에서 데이터로 쓰인다.
-     * 게임 제작 진행 도중에 특별히 프리셋이 바뀌었을 경우 화면에 강제로 렌더링을 해야 바뀐 아이템들이 표시된다.
-     * 
-     * @param set - 아이템 프리셋
-     */
-    registerItemSet(set: IItemSet) {
-        this._itemManager.registerPreset(set);
-    }
-
-    /**
-     * 현재 등록된 타입 맵을 반환한다.
-     */
-    exportItemTypeMap() {
-        return this._itemManager.exportTypeMap();
-    }
-
-    /**
-     * 아이템 타입 맵을 등록한다.
-     * 
-     * @remarks
-     * 등록한 맵 만이 게임에서 데이터로 사용된다.
-     * 맵이 새로 등록되면 자동으로 아이템 셋과 리스트는 초기화 된다.
-     * 
-     * @param value - 아이템 타입 맵
-     */
-    setItemTypeMap(value: ItemTypeMap){
-        this._itemManager.setItemMap(value);
-    }
-    
-    /**
-     * 아이템 갯수를 더하거나 뺀다.
+     * 아이템 갯수를 더하거나 빼거나 특정 갯수만큼 얻게한다.
      * 
      * @param nameOrCode - 해당 아이템의 이름 또는 코드
      * @param count - 더하거나 뺄 아이템 갯수, 음수 입력시 빠짐.
      */
     addItemCount(nameOrCode: string | number, count: number) {
-        // data
-        let code;
-        code = typeof nameOrCode === 'string' ? this._itemManager.itemSet.getItemCode(nameOrCode): nameOrCode;
-        let prevNum = this._itemManager.getItem(code).count;
-        let num = this._itemManager.addItemNumber(code, count);
-        let name = this._itemManager.itemSet.getItemName(code);
-        // view
-        if (prevNum !== num) {
-            this._setItemInnerHTML(name, code, num);
+        if (this._dataManager) {
+            // data
+            let code;
+            code = typeof nameOrCode === 'string' ? this._dataManager.getItemCode(nameOrCode) : nameOrCode;
+            let prevNum = this._itemManager.getItem(code).count;
+            let num = this._itemManager.addItemNumber(code, count);
+            let name = this._dataManager.getItemName(code);
+            // view
+            if (prevNum !== num) {
+                this._setItemInnerHTML(name, code, num);
+            }
         }
+    }
+
+    /**
+     * 아이템 갯수를 특정 갯수만큼으로 설정한다.
+     * 
+     * @param nameOrCode - 해당 아이템의 이름 또는 코드
+     * @param count - 설정할 갯수
+     */
+    setItemCount(nameOrCode: string | number, count: number) {
+        if (this._dataManager) {
+            // data
+            let code;
+            code = typeof nameOrCode === 'string' ? this._dataManager.getItemCode(nameOrCode) : nameOrCode;
+            let prevNum = this._itemManager.getItem(code).count;
+            let num = this._itemManager.setItemNumber(code, count);
+            let name = this._dataManager.getItemName(code);
+            // view
+            if (prevNum !== num) {
+                this._setItemInnerHTML(name, code, num);
+            }
+        }
+    }
+
+    /////////// ANCHOR model /////////////
+
+    /**
+     * 직접 아이템 모델을 가져온다.
+     * 
+     * @param code - 코드
+     */
+    getItemModel(code: number) {
+        return this._itemManager.getItem(code);
+    }
+
+    /**
+     * 데이터에 맞추어 아이템 모델을 다시 빌드한다.
+     */
+    rebuildItemModel() {
+        this._itemManager.initItems();
     }
 
     // ANCHOR View
@@ -125,19 +104,38 @@ export class Controller {
      * 아이템 목록을 강제로 렌더링한다.
      * 
      */
-    renderItemView(section: SectionType) {
-        // 아이템 목록 초기화
+    renderItemView() {
+        // view에서 아이템 목록 초기화
         this._gameView.itemTab.removeAllChilds();
-        const itemList = this._itemManager.itemList;
-        for (let code in itemList) {
-            const name = itemList[code].name;
-            const count = itemList[code].count;
-            if (count) {
-                this._setItemInnerHTML(name, Number(code), count);
+        // 데이터에서 읽어온 것으로 set
+        let itemList;
+        if (this._dataManager?.multipleItemSetMode) {
+            itemList = this._itemManager.itemMultiList;
+            for (let id in itemList) {
+                const set = itemList[id];
+                for (let code in set) {
+                    const name = itemList[id][code].name;
+                    const count = itemList[id][code].count;
+                    if (count > 0) {
+                        this._setItemInnerHTML(name, Number(code), count);
+                    }
+                }
+            }
+        }
+        else {
+            itemList = this._itemManager.itemSingleList;
+            for (let code in itemList) {
+                const name = itemList[code].name;
+                const count = itemList[code].count;
+                if (count > 0) {
+                    this._setItemInnerHTML(name, Number(code), count);
+                }
             }
         }
     }
 
+
+    /////////////// innerMethod ///////////////
 
     /**
      * item의 innerhtml 을 설정한다.
@@ -170,5 +168,22 @@ export class Controller {
         }
     }
 
-
+    /**
+     * @internal
+     * @param dm - 데이터 매니저
+     */
+    private _linkDataManager(dm: DataManager) {
+        this._dataManager = dm;
+        this._itemManager.linkDataManager(dm);
+    }
+    /**
+     * @internal
+     */
+    private _unlinkDataManager() {
+        const dm = this._dataManager
+        if (dm) {
+            this._itemManager.unlinkDataManager(dm);
+            this._dataManager = null;
+        }
+    }
 }

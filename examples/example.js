@@ -1,10 +1,22 @@
-let tg, con;
-let prevPreset;
+let tg, dm, con;
+let preset;
 
 document.addEventListener("DOMContentLoaded", function () {
   let tgContainer = document.getElementById("text-game");
+  // 게임생성
   tg = LYK.createTextGame(tgContainer);
-  con = tg.controller
+  // 데이터 매니저 만들기 (Data 단)
+  tg.createDataManager();
+  // 데이터 매니저 설정하기
+  tg.setDefaults();
+  // 컨트롤러 만들기
+  tg.createController();
+  // 데이터 매니저와 컨트롤러 연결하기
+  tg.linkDataManagerToCon();
+
+  dm = tg.dataManager;
+  con = tg.controller;
+
   example();
 });
 
@@ -31,13 +43,7 @@ function runAddItemCount_2() {
 }
 
 function regiItemSet() {
-    let preset 
-    if (prevPreset) {
-        preset = con.exportItemPreset();
-        con.registerItemSet(prevPreset);
-        prevPreset = preset;
-    }
-    else {
+    if (!preset) {
         preset = {
             1: {
                 name: '컴퓨터', 
@@ -64,10 +70,15 @@ function regiItemSet() {
                 type: {consume: true}
             }
         }
-        prevPreset = con.exportItemPreset();
-        con.registerItemSet(preset);
-
+        dm.registerItemSet('새로움', preset);
     }
+    if (dm.currentSet === 'default') {
+        dm.currentSet = '새로움';
+    }
+    else if(dm.currentSet === '새로움') {
+        dm.currentSet = 'default';
+    }
+    con.rebuildItemModel();
 }
 
 function renderItems() {
