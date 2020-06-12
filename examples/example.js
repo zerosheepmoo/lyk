@@ -24,7 +24,7 @@ function example() {
     console.log('You can test Here!');
     createButton('아이템 추가', runAddItemCount);
     createButton('아이템 빼기', runAddItemCount2);
-    createButton('새로운 아이템 셋으로 교체하기', regiItemSet);
+    createButton('새로운 아이템 셋으로 교체하기', regiItemSet, 'red');
     createButton('화면 재 렌더링', renderItems);
     createButton('아이템 추가2', runAddItemCount_2);
 }
@@ -85,10 +85,13 @@ function renderItems() {
     con.renderItemView();
 }
 
-function createButton(t, f) {
+function createButton(t, f, c) {
     let a = document.getElementById('test');
     let button = document.createElement('button');
     button.textContent = t;
     button.onclick = f;
+    if (c) {
+        button.style.color = c;
+    }
     a.appendChild(button);
 }

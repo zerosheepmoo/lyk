@@ -52,6 +52,9 @@ export class ItemManager {
         return this._list;
     }
 
+    /**
+     * 아이템 모델들의 리스트 (다중 아이템셋 동시 사용 가능 모드 때 만 사용)
+     */
     get itemMultiList() {
         return this._multipleList;
     }
