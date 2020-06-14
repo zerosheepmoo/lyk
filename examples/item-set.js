@@ -9,32 +9,43 @@ document.addEventListener("DOMContentLoaded", function () {
     tg.createDataManager();
     
     dm = tg.dataManager;
-    con = tg.controller;
-  
+
+    dm.itemTypeMap = {
+        consume: false,
+        equip: false,
+        story: false,
+        special: false
+    }
+
     example();    
   });
 
 function example() {
     console.log('You can test Here!');
+    createDropdown();
     createButton('현재 아이템 셋들 확인', useitemSetCollection)
     createButton('아이템 셋 등록하기 (새로움)', regiItemSet, 'red');
-    createButton('아이템 셋 등록하기2', regiItemSet2);
-    createDropdown();
-    createButton('아이템 셋 추가하기', addItemSet);
-    createButton('아이템 셋 추가하기2', addItemSet2, 'red');
-    createButton('아이템 셋에서 제거하기', removeItemSet);
+    createButton('아이템 셋 등록하기2 (새로움2)', regiItemSet2, 'blue');
+    createButton('현재 아이템 셋 추가하기', addItemSet);
+    createButton('특정 아이템 셋 (새로움) 추가하기2', addItemSet2, 'red');
+    createButton('현재 아이템 셋에서 제거하기', removeItemSet, 'red');
+    createButton('특정 아이템 셋(default)에서 제거하기2', removeItemSet2);
     // 이후 테스트 필요
-    createButton('컨트롤러 만들고 연결하기', creConAndLink);
+    createButton('컨트롤러 만들고 연결하기', creConAndLink, 'purple');
     createButton('현재 아이템 리스트(모델들) 확인', consoleCheckList, 'gray')
     createButton('모델 재구축', modelRebuild, 'green');
-    createButton('화면 렌더링', renderItems, 'blue');
+    createButton('화면 렌더링', renderItems, 'green');
 }
 
 function creConAndLink() {
     // 컨트롤러 만들기
     tg.createController();
+    
     // 데이터 매니저와 컨트롤러 연결하기
     tg.linkDataManagerToCon();
+    
+    // 컨트롤러 con 변수에 저장
+    con = tg.controller;
 }
 
 function modelRebuild() {
@@ -130,7 +141,15 @@ function addItemSet2() {
     console.log('지정한 id: "새로움" 셋에 추가')
 }
 
+function removeItemSet() {
+    dm.removeItems(1);
+    dm.removeItems([2, '레일건']);
+    dm.removeItems('가방')
+}
 
+function removeItemSet2() {
+    dm.removeItems(13, 'default');
+}
 
 function createButton(t, f, c) {
     let a = document.getElementById('test');
@@ -169,7 +188,7 @@ function createDropdown() {
         console.log(dm.getItemSet());
     }
 
-    document.body.appendChild(d);
+    document.getElementById('test').appendChild(d);
 }
 
 function consoleCheckList() {

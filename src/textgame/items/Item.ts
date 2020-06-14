@@ -129,6 +129,7 @@ export class Item {
         for (let itemType in value) {
             if (itemType === 'isUnique') {
                 unique = true;
+                delete value[itemType];
             }
             else {
                 itemTypes.setItemType(itemType, value[itemType]);
