@@ -20,5 +20,8 @@ export enum SectionType {
 
 export enum SectionClassName {
     ITEM = 'lyk-item',
-    ITEM_CON = 'lyk-item-container'
+    ITEM_CON = 'lyk-item-container',
+    STAT = 'lyk-status',
+    STAT_CON = 'lyk-status-container',
+    MAIN_CON = 'lyk-main-container'
 }

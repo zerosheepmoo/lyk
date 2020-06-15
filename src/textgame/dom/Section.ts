@@ -5,23 +5,23 @@
 
 import { DOMBase } from "./DOMBase";
 import { SectionType, SectionClassName } from "../Type";
-import { ExpParser, InnerExp, SignExp } from "../utils/Parser";
+import { ExpParser, InnerExp } from "../utils/Parser";
 
-export class Section extends DOMBase {
+export abstract class Section extends DOMBase {
     protected _childs: Section[] = [];
     private _code: number;
-    private _innerHTML: string = `{{ code }}`;
+    private _innerHTML: string = ``;
     private _type: SectionType;
+    protected _createCallback: () => HTMLElement;
     
-    private _innerExp: InnerExp;
-    private _signExp: SignExp;
+    protected _innerExp: InnerExp;
 
-    constructor(dom?: HTMLElement, parent?: Section, type?: SectionType, code?: number) {
-        super(dom, type, parent);
+    constructor(parent?: Section, type?: SectionType, className?: string, code?: number, eleID?: string) {
+        super(parent, eleID);
         this._type = type || SectionType.NONE;
         this._parent = parent || null;
         this._code = code || -1;
-        this._setStyle(this._type);
+        this._setStyle(className);
     }
 
     /**
@@ -36,6 +36,22 @@ export class Section extends DOMBase {
         }
     }
 
+    get type() {
+        return this._type;
+    }
+
+    /**
+     * dom element 생성 콜백
+     */
+    get createCallback() {
+        return this._createCallback;
+    }
+    set createCallback(value: () => HTMLElement) {
+        if (this._createCallback !== value) {
+            this._createCallback = value;
+        }
+    }
+
     /**
      * 안에 들어갈 html 표현식이 합쳐진 템플릿
      */
@@ -43,33 +59,12 @@ export class Section extends DOMBase {
         return this._innerHTML;
     }
 
-    setInnerHTML(value: string, innerExp: InnerExp, signExp: SignExp) {
+    setInnerHTML(value: string, innerExp: InnerExp) {
         this._innerHTML = value;
-        this._render(innerExp, signExp);
+        this.render(innerExp);
     }
 
-    /**
-     * 자식을 추가한다.
-     * 
-     * @param type - 섹션 종류
-     * @param code - 코드
-     * @param innerExp - 내부변수표현식
-     * @param signExp - 기호표현식
-     * 
-     * @returns 추가한 자식 섹션
-     */
-    addChild(type: SectionType, code: number, template?: string, innerExp?: InnerExp, signExp?: SignExp) {
-        let child = new Section(undefined, this, type, code);
-        if (template && innerExp && signExp) {
-            child.setInnerHTML(template, innerExp, signExp);
-        }
-        else {
-            child._render(innerExp, signExp);
-        }
-        this._childs.push(child);
-        this.dom.appendChild(child.dom);
-        return child;
-    }
+    
 
     /**
      * 자식을 제거한다.
@@ -81,7 +76,7 @@ export class Section extends DOMBase {
         let target = this._childs.splice(idx, 1)[0];
         target.clear();
         this.dom.removeChild(target.dom);
-        this._render();
+        this.render();
     }
 
     /**
@@ -95,7 +90,7 @@ export class Section extends DOMBase {
             this._childs.splice(i, 1);
         }
         if (render) {
-            this._render();
+            this.render();
         }
     }
 
@@ -109,7 +104,6 @@ export class Section extends DOMBase {
                 this._childs[i].removeAllChilds();
             }
         }
-        this._signExp = {};
         this._innerExp = {};
     }
 
@@ -132,28 +126,9 @@ export class Section extends DOMBase {
         }
     }
 
-    protected _createDom(ele: undefined, type: SectionType) {
-        if (type === SectionType.ITEM) {
-            return this._domAsItemSection();
-        }
-        else if (type === SectionType.ITEM_CON) {
-            return this._domAsItemConatiner();
-        }
-        else {
-            return null;
-        }
-    }
-    protected _setStyle(typeOrClassName: string) {
-        if (typeOrClassName === SectionType.ITEM) {
-            this.dom.className = SectionClassName.ITEM;
-        }
-        else if (typeOrClassName === SectionType.ITEM_CON) {
-            this.dom.className = SectionClassName.ITEM_CON;
-        }
-        else {
-            this.dom.className = typeOrClassName;
-        }
-    }
+    protected abstract addChild(type: SectionType, code: number, template?: string, innerExp?: InnerExp): Section;
+    protected abstract _createDom(): HTMLElement | null;
+    protected abstract _setStyle(className?: string): void;
 
     private _domAsItemSection() {
         let item = document.createElement('span');
@@ -163,33 +138,15 @@ export class Section extends DOMBase {
         let itemCon = document.createElement('div');
         return itemCon;
     }
-    private _render(innerExp?: InnerExp, signExp?: SignExp) {
-        if (this._childs.length > 0) {
-            for (let i = 0, len = this._childs.length; i < len; i++) {
-                this._childs[i]._render();
-            }
-        }
-        else {
-            if (this._type === SectionType.ITEM) {
-                if (innerExp && (!this._innerExp || this._innerExp !== innerExp)) {
-                    this._innerExp = innerExp;
-                }
-                if (signExp && (!this._signExp || this._signExp !== signExp)) {
-                    this._signExp = signExp;
-                }
-                let ih = ExpParser.getItemInnerHTML(this._innerHTML, this._innerExp);
-                ih = ExpParser.getSign(ih, this._signExp);
-                this.dom.innerHTML = ih;
-            }
-        }
+    private _domAsStatusContainer() {
+        let statCon = document.createElement('div');
+        return statCon;
+    }
+    private _domAsStatus() {
+        let stat = document.createElement('div');
+        return stat;
     }
 
-    findChilds(code: number) {
-        const cs = this._childs;
-        for (let i = 0, len = cs.length; i < len; i++) {
-            if (cs[i].code === code) {
-                return cs[i];
-            }
-        }
-    }
+
+    abstract render(innerExp?: InnerExp): void;
 }

@@ -6,11 +6,10 @@
 import { ItemManager } from "../items/ItemManager";
 import { MainView } from "../dom/MainView";
 import { StatusMananger } from "../stats/StatusManager";
-import { SignExp, InnerExp, ExpParser } from "../utils/Parser";
+import { InnerExp } from "../utils/Parser";
 import { SectionType } from "../Type";
-import { IItemSet } from "../items/interfaces/IItemSet";
-import { ItemTypeMap } from "../items/interfaces/ItemTypeMap";
 import { DataManager } from "../data/DataManager";
+import { DMNotExistError } from "../utils/Errors";
 
 /**
  * 컨트롤러 클래스
@@ -20,21 +19,36 @@ export class Controller {
     private _itemManager: ItemManager;
     private _statusManager: StatusMananger;
     private _gameView: MainView;
-    private _signExp: SignExp = {
-        plus: '+',
-        minus: '-',
-        multiple: 'x',
-        division: '/'
-    };
     private _templates = {
-        item: `{{name}}{{multiple}}{{count}}`
+        item: `{{name}}x{{count}}`
     }
 
-    constructor(div: HTMLDivElement) {
+    constructor(gameView: MainView) {
         this._itemManager = new ItemManager();
         this._statusManager = new StatusMananger();
-        this._gameView = new MainView(div, 'lyk-main');
+        this._gameView = gameView;
         this.renderItemView();
+    }
+
+    /**
+     * 화면에 표시되는 텍스트를 표현하는 표현식
+     * 
+     * @remarks
+     * 각각 다음과 같은 특별 표현을 사용할 수 있다.
+     * 
+     * [공통]
+     * {{plus}} + 기호
+     * {{minus}} - 기호
+     * {{multiple}} * 기호
+     * {{division}} / 기호
+     * 
+     * [item]
+     * {{code}} 아이템 코드
+     * {{name}} 아이템 이름
+     * {{count}} 아이템 갯수
+     */
+    get template() {
+        return this._templates;
     }
 
     // ANCHOR items
@@ -44,8 +58,9 @@ export class Controller {
      * 
      * @param nameOrCode - 해당 아이템의 이름 또는 코드
      * @param count - 더하거나 뺄 아이템 갯수, 음수 입력시 빠짐.
+     * @param rendering - 렌더링 여부, 기본값 `true`
      */
-    addItemCount(nameOrCode: string | number, count: number) {
+    addItemCount(nameOrCode: string | number, count: number, rendering: boolean = true) {
         if (this._dataManager) {
             // data
             let code;
@@ -53,10 +68,14 @@ export class Controller {
             let prevNum = this._itemManager.getItem(code).count;
             let num = this._itemManager.addItemNumber(code, count);
             let name = this._dataManager.getItemName(code);
+
             // view
-            if (prevNum !== num) {
+            if (prevNum !== num && rendering) {
                 this._setItemInnerHTML(name, code, num);
             }
+        }
+        else {
+            throw DMNotExistError;
         }
     }
 
@@ -78,6 +97,9 @@ export class Controller {
             if (prevNum !== num) {
                 this._setItemInnerHTML(name, code, num);
             }
+        }
+        else {
+            throw DMNotExistError;
         }
     }
 
@@ -160,11 +182,11 @@ export class Controller {
                 itemTab.removeChild(code);
             }
             else {
-                item.setInnerHTML(template, innerExp, this._signExp);
+                item.setInnerHTML(template, innerExp);
             }
         }
         else {
-            this._gameView.itemTab.addChild(SectionType.ITEM, code, template, innerExp, this._signExp);
+            this._gameView.itemTab.addChild(SectionType.ITEM, code, template, innerExp);
         }
     }
 

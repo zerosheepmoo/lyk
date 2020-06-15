@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 데이터 매니저 설정하기
   tg.setDefaults();
   // 컨트롤러 만들기
-  tg.createController();
+  tg.createController('text-game');
   // 데이터 매니저와 컨트롤러 연결하기
   tg.linkDataManagerToCon();
 
@@ -32,6 +32,11 @@ function example() {
 function runAddItemCount() {
     con.addItemCount('총', 1);
     con.addItemCount(2, 3);
+    con.addItemCount(3, 1);
+    con.addItemCount(4, 1);
+    con.addItemCount(5, 1);
+    con.addItemCount(6, 1);
+    con.addItemCount(7, 2);
 }
 function runAddItemCount2() {
     con.addItemCount('총', -1);

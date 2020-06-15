@@ -1,3 +1,5 @@
+import { DOMNotExistError } from "../utils/Errors";
+
 /*****************************************
 | DOMBase.ts                            
 | 2020. 06. 08. created by zerosheepmoo  |
@@ -5,26 +7,29 @@
 
 /**
  * 베이스 클래스
- * 
- * @remarks
- * 무조건 첫번째 아규먼트는 dom 이다.
  */
 export abstract class DOMBase {
     private _dom: HTMLElement;
     protected _childs: DOMBase[] = [];
     protected _parent: DOMBase | null = null;
 
-    constructor(ele?: HTMLElement, type?: string, parent?: DOMBase) {
-        if (ele) {
-            this._dom = ele;
-        }
-        else {
-            const dom = this._createDom(ele, type);
+    constructor(parent?: DOMBase, eleID?: string) {
+        if (eleID) {
+            const dom = document.getElementById(eleID);
             if (dom) {
                 this._dom = dom;
             }
             else {
-                throw new Error('element id or createDom function is required.')
+                throw DOMNotExistError;
+            }
+        }
+        else {
+            const dom = this._createDom();
+            if (dom) {
+                this._dom = dom;
+            }
+            else {
+                throw DOMNotExistError;
             }
         }
     }
@@ -44,5 +49,5 @@ export abstract class DOMBase {
     protected _addChild(dom: DOMBase) {
         this._childs.push(dom);
     }
-    protected abstract _createDom(...args: any[]): HTMLElement | null;
+    protected abstract _createDom(): HTMLElement | null;
 }
