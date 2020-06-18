@@ -147,10 +147,6 @@ export class Item {
     }
 
     private _parseOthers(value: IItemOpts) {
-        if (value.isFixed !== undefined) {
-            this.isFixedCount = value.isFixed;
-        }
-        
         if(value.max !== undefined) {
             this.maxCount = value.max;
         }
@@ -164,6 +160,10 @@ export class Item {
         }
         else {
             this.count = this._minCount;
+        }
+
+        if (value.isFixed !== undefined) {
+            this.isFixedCount = value.isFixed;
         }
     }
 }

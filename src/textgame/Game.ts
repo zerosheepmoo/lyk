@@ -22,12 +22,7 @@ export class TextGame {
         set: FantasyItems,
         map: DefaultItemMap
     }
-    private _dom: HTMLDivElement;
     private _auto: boolean = true;
-
-    constructor(div: HTMLDivElement) {
-        this._dom = div;
-    }
 
     get auto() {
         return this._auto;

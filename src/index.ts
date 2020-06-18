@@ -25,7 +25,7 @@ export class LYK {
         return new Chang(canvas);
     }
 
-    static createTextGame(div: HTMLDivElement) {
-        return new TextGame(div);
+    static createTextGame() {
+        return new TextGame();
     }
 }

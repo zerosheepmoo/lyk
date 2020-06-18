@@ -30,7 +30,7 @@ export class ItemManager {
      */
     linkDataManager(dm: DataManager) {
         this._dm = dm;
-        dm.isLinked = true;
+        dm.isItemLinked = true;
         this.initItems();
     }
 
@@ -39,7 +39,7 @@ export class ItemManager {
      */
     unlinkDataManager(dm: DataManager) {
         if (this._dm) {
-            this._dm.isLinked = false;
+            this._dm.isItemLinked = false;
             this._dm = null;
             this._clearItems();
         }

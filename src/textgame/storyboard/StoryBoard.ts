@@ -166,10 +166,40 @@ export class StoryBoard {
         this._scenario = clone(this._flows);
     }
 
+
+    /**
+     * 데이터 매니저를 연결한다.
+     * @param dm - 데이터 매니저
+     */
+    linkDataManager(dm: DataManager) {
+        this._dm = dm;
+        dm.isStyLinked = true;
+        this._init;
+    }
+
+    /**
+     * 데이터 매니저의 연결을 끊는다.
+     */
+    unlinkDataManager(dm: DataManager) {
+        if (this._dm) {
+            this._dm.isStyLinked = false;
+            this._dm = null;
+            this._clear();
+        }
+    }
+
+    ////// inner method //////
+
     private _init() {
         if (this._dm) {
-
             const defaultFlow = new Flow(this._introFlow);
+            const introSty = this.findStory(this._introFlow);
+            if (introSty) {
+                defaultFlow.story = introSty;
+            }
+            else {
+                throw new Error('there is no intro story: ' + this._introFlow);
+            }
         }
         else {
             throw DMNotExistErrorCore
@@ -187,6 +217,10 @@ export class StoryBoard {
             const cho = this._createChoice(name, choices[name]);
             this._choices[name] = cho;
         }
+    }
+
+    private _clear() {
+        
     }
 
     private _createStory(storyName: string, story: IStory) {

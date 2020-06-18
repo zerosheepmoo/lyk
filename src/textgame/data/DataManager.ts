@@ -6,18 +6,31 @@
 import { IItemSet } from "../items/interfaces/IItemSet";
 import { ItemTypeMap } from "../items/interfaces/ItemTypeMap";
 import { IItemType } from "../items/interfaces/IItemType";
+import { IStories } from "../storyboard/interfaces/IStories";
+import { IChoices } from "../storyboard/interfaces/IChoices";
+import { IStats } from "../stats/interfaces/IStats";
 
 /**
  * 데이터 매니저 클래스
  */
 export class DataManager {
+
     private _itemSet: {[id: string]: IItemSet} = {'default':{}};
     private _itemMap: ItemTypeMap;
     private _currentSet: string = 'default';
     private _multipleItemSetMode: boolean = false;
-    private _isLinked: boolean = false;
+    private _isItemLinked: boolean = false;
 
-    // ANCHOR item set
+    private _storySet: IStories;
+    private _choiceSet: IChoices;
+    private _isStyLinked: boolean;
+    private _defaultStoryText: string = `스토리의 텍스트를 지정하세요.`;
+    private _defaultChoiceText: string = `선택지의 텍스트를 지정하세요.`;
+
+    private _status: IStats;
+    private _isStatsLinked: boolean;
+
+    // ANCHOR property
 
     /**
      * 동시 다중 셋 사용 모드가 아닐 경우, 현재 셋의 아이디
@@ -63,25 +76,61 @@ export class DataManager {
         return this._itemMap;
     }
     set itemTypeMap(typeMap: ItemTypeMap) {
-        this._validateChange();
+        this._validateMapChange();
         if (this._itemMap !== typeMap) {
             this._itemMap = typeMap;
-            this.clear();
+            this.clearIt();
         }
     }
 
     /**
-     * 다른 것과 링크되어있는지의 여부
+     * 아이템 모델과 링크되어있는지의 여부
      * 
      * @remarks
      * 사용자가 임의로 변경하지 말것
      */
-    get isLinked() {
-        return this._isLinked;
+    get isItemLinked() {
+        return this._isItemLinked;
     }
-    set isLinked(value: boolean) {
-        this._isLinked = value;
+    set isItemLinked(value: boolean) {
+        this._isItemLinked = value;
     }
+
+    /**
+     * 스토리 셋
+     */
+    get storySet() {
+        return this._storySet;
+    }
+    set storySet(value: IStories) {
+        this._storySet = value;
+    }
+
+    /**
+     * 선택지 셋
+     */
+    get choiceSet() {
+        return this._choiceSet;
+    }
+    set choiceSet(value: IChoices) {
+        this._choiceSet = value;
+    }
+
+    /**
+     * 스토리보드와 링크되어있는지의 여부
+     * 
+     * @remarks
+     * 사용자가 임의로 변경하지 말것
+     */
+    get isStyLinked() {
+        return this._isStyLinked;
+    }
+    set isStyLinked(value: boolean) {
+        this._isStyLinked = value;
+    }
+
+
+    // ANCHOR methods 
 
     /**
      * 아이템 셋 데이터를 반환한다.
@@ -214,23 +263,31 @@ export class DataManager {
     }
 
     /**
-     * 데이터 매니저를 클리어한다.
+     * 데이터 매니저에서 아이템 관련 데이터를 클리어한다.
      */
-    clear() {
+    clearIt() {
         this._currentSet = 'default';
         this._multipleItemSetMode = false;
         this._itemSet = {'default': {}};
     }
 
-    ////////// inner method //////////
+    /**
+     * 데이터 매니저에서 스토리 및 선택지 관련 데이터를 클리어한다.
+     */
+    clearFl() {
+        this._choiceSet = {intro: { text: `선택지의 텍스트를 지정하세요.`}};
+        this._storySet = {intro: { text: `스토리의 텍스트를 지정하세요.`}};
+    }
+
+    ////////// ANCHOR inner method //////////
     private _validateItemSet(id: string) {
         if (!this._itemSet[id]) {
             throw new Error('There is no such ItemSet: ' + id);
         }
     }
 
-    private _validateChange() {
-        if (this._isLinked) {
+    private _validateMapChange() {
+        if (this._isItemLinked) {
             throw new Error('The DataManager already linked with ItemManager. Set properties before link or unlink and relink');
         }
     }
