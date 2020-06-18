@@ -9,6 +9,10 @@ import { IStory } from "./interfaces/IStory";
 import { IChoice } from "./interfaces/IChoice";
 import { Flow } from "./Flow";
 import { clone } from "../utils/Util";
+import { IStories } from "./interfaces/IStories";
+import { IChoices } from "./interfaces/IChoices";
+import { DataManager } from "../data/DataManager";
+import { DMNotExistErrorCore } from '../utils/Errors'
 
 /**
  * 스토리 보드 클래스
@@ -20,10 +24,10 @@ export class StoryBoard {
     private _introFlow: string = 'intro';
     private _nowFlow: string = 'intro';
     private _scenario: {[name: string]: Flow};
+    private _dm: DataManager | null;
 
-    constructor(stories: IStory[], choices: IChoice[]) {
+    constructor() {
         this._init();
-        this._parse(stories, choices);
     }
 
     /**
@@ -128,30 +132,18 @@ export class StoryBoard {
     }
 
     /**
-     * 스토리를 스토리 데이터 셋에 추가한다.
-     * 
-     * @param story - 추가할 스토리
-     */
-    addStory(story: IStory) {
-        const sty = this._createStory(story);
-        this._stories[sty.name] = sty;
-    }
-
-    /**
-     * 스토리를 스토리 데이터 셋에서 제거한다.
-     * 
-     * @param story - 제거할 스토리명
-     */
-    removeStory(story: string) {
-        delete this._stories[story]
-    }
-
-    /**
      * 현재 플로우를 앞으로의 시나리오에서 제거한다.
      */
-    endFlow() {
-        this.now.close = true;
-        delete this._scenario[this._nowFlow];
+    endFlow(name?: string) {
+        if (name) {
+            const flo = this.findFlow(name)
+            flo.isClosed = true;
+            delete this._scenario[flo.name];
+        }
+        else {
+            this.now.isClosed = true;
+            delete this._scenario[this._nowFlow];
+        }
     }
 
     /**
@@ -162,44 +154,49 @@ export class StoryBoard {
         const sce = this._scenario;
         if (!sce[name]) {
             const flow = this._flows[name];
-            flow.open = true;
+            flow.isOpened = true;
             sce[name] = flow;
         }
     }
 
+    /**
+     * 현재 설정된 플로우들을 모두 시나리오로 적용
+     */
     applyFlows() {
         this._scenario = clone(this._flows);
     }
 
     private _init() {
-        const defaultFlow = new Flow(this._introFlow);
-        const defaultStory = new Story(this._introFlow);
-        defaultStory.text = `Please, set main flow`;
-        defaultFlow.story = defaultStory;
-        this._flows[this._introFlow] = defaultFlow;
-        this.applyFlows();
+        if (this._dm) {
+
+            const defaultFlow = new Flow(this._introFlow);
+        }
+        else {
+            throw DMNotExistErrorCore
+        }
+        
     }
 
-    private _parse(stories: IStory[], choices: IChoice[]) {
-        for (let i = 0, len = stories.length; i < len; i++) {
-            const sty = this._createStory(stories[i]);
-            this._stories[sty.name] = sty;
+    private _parse(stories: IStories, choices: IChoices) {
+        for (let name in stories) {
+            const sty = this._createStory(name, stories[name]);
+            this._stories[name] = sty;
         }
 
-        for (let i = 0, len = choices.length; i < len; i++) {
-            const cho = this._createChoice(choices[i]);
-            this._choices[cho.name] = cho;
+        for (let name in choices) {
+            const cho = this._createChoice(name, choices[name]);
+            this._choices[name] = cho;
         }
     }
 
-    private _createStory(story: IStory) {
-        const sty = new Story(story.name);
+    private _createStory(storyName: string, story: IStory) {
+        const sty = new Story(storyName);
         sty.text = story.text;
         return sty;
     }
 
-    private _createChoice(choice: IChoice) {
-        const cho = new Choice(choice.name);
+    private _createChoice(choiceName: string, choice: IChoice) {
+        const cho = new Choice(choiceName);
         cho.text = choice.text;
         return cho;
     }

@@ -14,7 +14,7 @@ export class Flow {
     private _choices: Choice[];
     private _name: string;
 
-    private _open: boolean = true;
+    private _isOpened: boolean = true;
 
     constructor(name: string) {
         this._name = name;
@@ -63,12 +63,12 @@ export class Flow {
      * @remarks
      * `true` 여야 StoryBoard 에서 읽어온다.
      */
-    get open(): boolean {
-        return this._open;
+    get isOpened(): boolean {
+        return this._isOpened;
     }
-    set open(value: boolean) {
-        if (this._open !== value) {
-            this._open = value;
+    set isOpened(value: boolean) {
+        if (this._isOpened !== value) {
+            this._isOpened = value;
         }
     }
 
@@ -78,12 +78,12 @@ export class Flow {
      * @remarks
      * `true` 면 다시 StoryBoard에서 읽어오지 않는다.
      */
-    get close() {
-        return !this._open
+    get isClosed() {
+        return !this._isOpened
     }
-    set close(value: boolean) {
-        if (this._open === value) {
-            this._open = !value;
+    set isClosed(value: boolean) {
+        if (this._isOpened === value) {
+            this._isOpened = !value;
         }
     }
 }

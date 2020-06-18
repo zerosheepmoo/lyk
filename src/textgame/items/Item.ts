@@ -7,6 +7,7 @@ import { IItemType } from './interfaces/IItemType';
 import { ItemTypes } from "./ItemType";
 import { ItemTypeMap } from './interfaces/ItemTypeMap';
 import { IItemOpts } from './interfaces/IItemOpts';
+import { ItemFCountError } from '../utils/Errors';
 
 
 /**
@@ -73,16 +74,21 @@ export class Item {
         return this._count;
     }
     set count(value: number) {
-        if (this._count !== value) {
-            if (value > this._maxCount) {
-                this._count = this._maxCount;
+        if (!this._isFixedCount) {
+            if (this._count !== value) {
+                if (value > this._maxCount) {
+                    this._count = this._maxCount;
+                }
+                else if (value < this.minCount) {
+                    this._count = this._minCount;
+                }
+                else {
+                    this._count = value;
+                }     
             }
-            else if (value < this.minCount) {
-                this._count = this._minCount;
-            }
-            else {
-                this._count = value;
-            }     
+        }
+        else {
+            throw ItemFCountError;
         }
     }
     

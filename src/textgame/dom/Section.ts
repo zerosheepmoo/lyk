@@ -4,8 +4,8 @@
 ******************************************/
 
 import { DOMBase } from "./DOMBase";
-import { SectionType, SectionClassName } from "../Type";
-import { ExpParser, InnerExp } from "../utils/Parser";
+import { SectionType} from "../Type";
+import { InnerExp } from "../utils/Parser";
 
 export abstract class Section extends DOMBase {
     protected _childs: Section[] = [];
