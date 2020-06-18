@@ -16,62 +16,66 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   let preset = {
     1: {
-      name: '컴퓨터',
+      name: '의문의 편지',
       type: { story: true}
     },
     2: {
-      name: '레일건',
-      type: { equip: true },
-      startCount: 1,
-      isFixed: true
+      name: '물',
+      type: { consume: true },
+      startCount: 3,
+      maxCount: 10
     },
     3: {
-      name: '현자의 돌',
+      name: '총',
       type: 'special'
     },
     4: {
-      name: '가방',
+      name: '통조림',
       type: { equip: true }
     },
     5: {
-      name: '가면',
+      name: '붕대',
       type: { equip: true, consume: true }
     },
     6: {
-      name: '총',
-      type: { consume: true },
-      maxCount: 4,
-      minCount: 1
+      name: '몽둥이',
+      type: { equip: true },
+      minCount: 1,
+      isFixedCount: true
     }
   }
   dm.setDefaultItemSet(preset);
   tg.createController('text-game');
   tg.linkDataManagerToCon();
-  con = tg.controller
+  con = tg.controller;
+  con.renderItemView();
   example();
 });
 
 function example() {
   console.log('You can test Here!');
   createButton('아이템 구축!', runAddItemCount);
-  createButton('아이템 파기!', runAddItemCount2);
-  // createButton('새로운 아이템 셋으로 교체!', regiItemSet);
-  // createButton('화면 재 렌더링', rednerItems);
-  createButton('아이템 구축2!', runAddItemCount_2);
+  createButton('아이템 파기!', runAddItemCountMinus);
+  createButton('아이템 구축2!', runAddItemCount2);
+  createButton('아이템 파기2!', runAddItemCountMinus2);
   createButton('갯수고정!', fixedCountTest);
   createButton('갯수고정해제!!!!', fixedCountTest2);
+  createButton('특정아이템 랜덤 갯수', rItemCount);
 }
 
 function runAddItemCount() {
-  con.addItemCount('총', 1);
-  con.addItemCount(2, 3);
+  con.addItemCount(2, 1);
 }
-function runAddItemCount2() {
-  con.addItemCount('총', -1);
+function runAddItemCountMinus() {
+  con.addItemCount(2, -1);
 }
 
-function runAddItemCount_2() {
-  con.addItemCount('총`', 1);
+function runAddItemCount2() {
+  con.addItemCount(6, 1);
+}
+
+function runAddItemCountMinus2() {
+  con.addItemCount(6, -1);
 }
 
 function fixedCountTest() {
@@ -86,6 +90,26 @@ function fixedCountTest2() {
 
 function renbuildItemModel() {
   con.renderItemView();
+}
+
+function rItemCount() {
+  con.setItemCount(4, random())
+}
+
+function random() {
+  const num = Date.now() % 8;
+  if (num < 4) {
+    return 1;
+  }
+  else if (num < 6) {
+    return 2;
+  }
+  else if (num < 7) {
+    return 3;
+  }
+  else {
+    return 0;
+  }
 }
 
 //; util 펑션
