@@ -186,7 +186,7 @@ export class Controller {
             }
         }
         else {
-            this._gameView.itemTab.addChild(SectionType.ITEM, code, template, innerExp);
+            this._gameView.itemTab.addChild(SectionType.ITEM, template, code, innerExp);
         }
     }
 

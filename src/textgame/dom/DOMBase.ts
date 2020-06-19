@@ -46,8 +46,5 @@ export abstract class DOMBase {
             this._dom.className = styleName;
         }
     }
-    protected _addChild(dom: DOMBase) {
-        this._childs.push(dom);
-    }
     protected abstract _createDom(): HTMLElement | null;
 }

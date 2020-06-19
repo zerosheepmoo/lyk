@@ -21,11 +21,11 @@ export class DataManager {
     private _multipleItemSetMode: boolean = false;
     private _isItemLinked: boolean = false;
 
-    private _storySet: IStories;
-    private _choiceSet: IChoices;
-    private _isStyLinked: boolean;
+    private _isStyLinked: boolean = false;
     private _defaultStoryText: string = `스토리의 텍스트를 지정하세요.`;
     private _defaultChoiceText: string = `선택지의 텍스트를 지정하세요.`;
+    private _storySet: IStories = {intro: { text: this._defaultStoryText}};
+    private _choiceSet: IChoices = {intro: { text: this._defaultChoiceText}};;
 
     private _status: IStats;
     private _isStatsLinked: boolean;
@@ -129,6 +129,18 @@ export class DataManager {
         this._isStyLinked = value;
     }
 
+    /**
+     * 스테이터스와 링크되어있는지의 여부
+     * 
+     * @remarks
+     * 사용자가 임의로 변경하지 말것
+     */
+    get isStatsLinked() {
+        return this._isStatsLinked;
+    }
+    set isStatsLinked(value: boolean) {
+        this._isStatsLinked = value;
+    }
 
     // ANCHOR methods 
 
@@ -275,8 +287,8 @@ export class DataManager {
      * 데이터 매니저에서 스토리 및 선택지 관련 데이터를 클리어한다.
      */
     clearFl() {
-        this._choiceSet = {intro: { text: `선택지의 텍스트를 지정하세요.`}};
-        this._storySet = {intro: { text: `스토리의 텍스트를 지정하세요.`}};
+        this._storySet = {intro: { text: this._defaultStoryText}};
+        this._choiceSet = {intro: { text: this._defaultChoiceText}};
     }
 
     ////////// ANCHOR inner method //////////

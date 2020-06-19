@@ -37,3 +37,17 @@
 .lyk-status-health-level-3 {
 
 }
+
+.lyk-story-container {
+    width: calc(100% -2px);
+    height: 50%;
+    border: gainsboro 1px solid;
+    background-color: lightgrey;
+}
+
+.lyk-status-container {
+    width: calc(100% -2px);
+    height: 20%;
+    border: gainsboro 1px solid;
+    background-color: lightgoldenrodyellow;
+}

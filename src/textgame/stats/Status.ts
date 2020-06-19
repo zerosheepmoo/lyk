@@ -12,7 +12,7 @@ export class Status {
     private _name: string;
     private _level: number;
     private _minLevel: number = 0;
-    private _maxLevel: number = 3;
+    private _maxLevel: number = Infinity;
     private _fixed: boolean;
 
 

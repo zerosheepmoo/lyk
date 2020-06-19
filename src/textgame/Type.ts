@@ -13,6 +13,7 @@ export enum SectionType {
     STAT_CON = 'statusContainer',
     CHOICES = 'choiceContainer',
     CHOICE = 'choice',
+    STORY_CON = 'storyContainer',
     STORY = 'story',
     MAIN_CON = 'mainContainer',
     NONE = 'none'
@@ -23,5 +24,9 @@ export enum SectionClassName {
     ITEM_CON = 'lyk-item-container',
     STAT = 'lyk-status',
     STAT_CON = 'lyk-status-container',
-    MAIN_CON = 'lyk-main-container'
+    MAIN_CON = 'lyk-main-container',
+    CHOICES = 'choiceContainer',
+    CHOICE = 'choice',
+    STORY_CON = 'lyk-story-container',
+    STORY = 'story'
 }

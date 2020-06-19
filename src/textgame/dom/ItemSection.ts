@@ -44,7 +44,7 @@ export class ItemSection extends Section {
         }
     }
 
-    protected addChild(type: SectionType, code: number, template?: string, innerExp?: InnerExp): Section {
+    protected addChild(type: SectionType): Section {
         throw new Error('ItemSection cannot add a child Section.')
     }
 }

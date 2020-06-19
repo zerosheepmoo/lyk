@@ -8,6 +8,10 @@ import { SectionType, SectionClassName } from '../Type';
 import { ItemContainer } from './ItemContainer';
 import { ContainerSection } from './ContainerSection'
 import { UnexpectedError } from '../utils/Errors';
+import { StoryContainer } from './StoryContainer';
+import { ChoiceContainer } from './ChoiceContainer';
+import { InnerExp } from '../utils/Parser';
+import { StatusContainer } from './StatusContainer';
 
 
 /**
@@ -19,8 +23,8 @@ import { UnexpectedError } from '../utils/Errors';
 export class MainView extends Section {
     
     private _statusTab: Section;
-    private _storyTab: Section;
-    private _choiceTab: Section;
+    private _storyTab: StoryContainer;
+    private _choiceTab: ChoiceContainer;
     private _itemTab: ItemContainer;
 
     private _auto: boolean;
@@ -30,8 +34,11 @@ export class MainView extends Section {
         this._setStyle(styleName);
         this._auto = auto;
         if (auto) {
-            // this._statusTab = this.addChild(SectionType.STAT_CON, -1);
-            this._itemTab = this.addChild(SectionType.ITEM_CON, -1) as ItemContainer;
+            this._statusTab = this._addChild(SectionType.STAT_CON) as StatusContainer;
+            
+            this._storyTab = this._addChild(SectionType.STORY_CON) as StoryContainer;
+            // this._choiceTab = this._addChild(SectionType.CHOICES) as ChoiceContainer;
+            this._itemTab = this._addChild(SectionType.ITEM_CON) as ItemContainer;
         }
     }
 
@@ -62,7 +69,7 @@ export class MainView extends Section {
      */
     createStatusTab() {
         if (!this._auto) {
-            this._statusTab = this.addChild(SectionType.STAT_CON, -1);
+            this._statusTab = this._addChild(SectionType.STAT_CON);
         }
     }
 
@@ -74,21 +81,21 @@ export class MainView extends Section {
      */
     createItemTab() {
         if (!this._auto) {
-            this._itemTab = this.addChild(SectionType.ITEM_CON, -1) as ItemContainer;
+            this._itemTab = this._addChild(SectionType.ITEM_CON) as ItemContainer;
         }
     }
 
-    /**
-     * 자식 섹션을 추가한다.
-     * 
-     * @param type - 섹션 타입
-     * @param code - 컨테이너 코드 (-1)
-     * @param className - 커스텀 스타일 클래스 명
-     */
-    protected addChild(type: SectionType, code: number, className?: string): ContainerSection {
+
+    private _addChild(type: SectionType, className?: string): ContainerSection {
         let child: ContainerSection;
         if (type === SectionType.ITEM_CON) {
             child = new ItemContainer(this, type, className)
+        }
+        else if (type === SectionType.STORY_CON) {
+            child = new StoryContainer(this, type, className);
+        }
+        else if (type === SectionType.STAT_CON) {
+            child = new StatusContainer(this, type, className);
         }
         else {
             throw UnexpectedError;
@@ -98,6 +105,7 @@ export class MainView extends Section {
 
         return child;
     }
+    
     protected _setStyle(className?: string): void {
         if (className) {
             this.dom.className = className;
@@ -111,5 +119,14 @@ export class MainView extends Section {
 
     protected _createDom() {
         return null;
+    }
+    /**
+     * 자식 섹션을 추가한다.
+     * 
+     * @param type - 섹션 타입
+     * @param className - 커스텀 스타일 클래스 명
+     */
+    protected addChild(type: SectionType, template?: string, code?: number, innerExp?: InnerExp): Section {
+        throw new Error('MainView Cannot use addChild');
     }
 }

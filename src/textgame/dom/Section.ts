@@ -126,7 +126,7 @@ export abstract class Section extends DOMBase {
         }
     }
 
-    protected abstract addChild(type: SectionType, code: number, template?: string, innerExp?: InnerExp): Section;
+    protected abstract addChild(type: SectionType, template?: string, code?: number, innerExp?: InnerExp, className?: string): Section;
     protected abstract _createDom(): HTMLElement | null;
     protected abstract _setStyle(className?: string): void;
 

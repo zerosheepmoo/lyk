@@ -30,7 +30,7 @@ export abstract class ContainerSection extends Section {
         return document.createElement('div');
     }
 
-    protected abstract addChild(type: SectionType, code: number, template: string, innerExp: InnerExp): Section;
+    protected abstract addChild(type: SectionType, template: string, code: number, innerExp: InnerExp): Section;
     
     protected abstract _setStyle(className?: string): void
 }

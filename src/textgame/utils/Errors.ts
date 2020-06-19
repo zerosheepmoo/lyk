@@ -13,3 +13,4 @@ export const DMNotExistErrorCore = new Error('There is no DataManager in core th
 export const MethodExistError = new Error('There is no such method on this instance');
 export const UnexpectedError = new Error('Unexpected unknown error. Only the maintainer knows');
 export const ItemFCountError = new Error('the item is now Fixed Count');
+export const NoItemCode = new Error('There is no item code.');

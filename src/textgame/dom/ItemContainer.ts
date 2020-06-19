@@ -3,6 +3,7 @@ import { Section } from "./Section";
 import { SectionType, SectionClassName } from "../Type";
 import { ItemSection } from "./ItemSection";
 import { InnerExp, ExpParser } from "../utils/Parser";
+import { NoItemCode } from "../utils/Errors";
 
 /*****************************************
 | ItemContainer.ts                            
@@ -24,18 +25,22 @@ export class ItemContainer extends ContainerSection {
      * 
      * @returns 추가한 자식 섹션
      */
-    addChild(type: SectionType.ITEM, code: number, template?: string, innerExp?: InnerExp): ItemSection {
-        let child = new ItemSection(this, type, code);
-        if (template && innerExp) {
-            child.setInnerHTML(template, innerExp);
+    addChild(type: SectionType.ITEM, template?: string, code?: number, innerExp?: InnerExp, className?: string): ItemSection {
+        if (code) {
+            let child = new ItemSection(this, type, code, className);
+            if (template && innerExp) {
+                child.setInnerHTML(template, innerExp);
+            }
+            else {
+                child.render(innerExp);
+            }
+            this._childs.push(child);
+            this.dom.appendChild(child.dom);
+            return child;
         }
         else {
-            child.render(innerExp);
+            throw NoItemCode;
         }
-        this._childs.push(child);
-        this.dom.appendChild(child.dom);
-
-        return child;
     }
 
     /**
