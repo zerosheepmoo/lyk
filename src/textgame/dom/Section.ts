@@ -59,7 +59,7 @@ export abstract class Section extends DOMBase {
         return this._innerHTML;
     }
 
-    setInnerHTML(value: string, innerExp: InnerExp) {
+    setInnerHTML(value: string, innerExp?: InnerExp) {
         this._innerHTML = value;
         this.render(innerExp);
     }

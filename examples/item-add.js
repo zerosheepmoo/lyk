@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", function () {
   tg.createController('text-game');
   tg.linkDataManagerToCon();
   con = tg.controller;
-  con.renderItemView();
   example();
 });
 

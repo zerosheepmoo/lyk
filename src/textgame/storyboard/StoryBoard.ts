@@ -18,17 +18,13 @@ import { DMNotExistErrorCore } from '../utils/Errors'
  * 스토리 보드 클래스
  */
 export class StoryBoard {
-    private _stories: {[name: string]: Story};
-    private _choices: {[name: string]: Choice};
-    private _flows: {[name: string]: Flow};
+    private _stories: {[name: string]: Story} = {};
+    private _choices: {[name: string]: Choice} = {};
+    private _flows: {[name: string]: Flow} = {};
     private _introFlow: string = 'intro';
     private _nowFlow: string = 'intro';
     private _scenario: {[name: string]: Flow};
     private _dm: DataManager | null;
-
-    constructor() {
-        this._init();
-    }
 
     /**
      * 맨 처음 등장할 플로우 오브젝트
@@ -59,10 +55,10 @@ export class StoryBoard {
     /**
      * 현재 플로우의 이름
      */
-    get nowFlow() {
+    get nowFlowName() {
         return this._nowFlow;
     }
-    set nowFlow(value: string) {
+    set nowFlowName(value: string) {
         if (this._nowFlow !== value) {
             this._nowFlow = value;
         }
@@ -119,12 +115,11 @@ export class StoryBoard {
     /**
      * 플로우 찾기
      * 
-     * @param flow - 플로우 명
+     * @param name - 플로우 명
      */
-    findFlow(flow: string) {
-        const flo =  this._flows[name];
-        if (flo) {
-            return flo;
+    findFlow(name: string) {
+        if (this._flows[name] !== undefined) {
+            return this._flows[name];
         }
         else {
             throw new Error('There is no such Flow!')
@@ -160,12 +155,18 @@ export class StoryBoard {
     }
 
     /**
-     * 현재 설정된 플로우들을 모두 시나리오로 적용
+     * 현재 opened로 설정된 플로우들을 모두 시나리오로 적용
      */
     applyFlows() {
-        this._scenario = clone(this._flows);
+        const flos = this._flows;
+        for (let name in flos) {
+            if (flos[name].isOpened) {
+                this._scenario[name] = flos[name];
+            }
+        }
     }
 
+    
 
     /**
      * 데이터 매니저를 연결한다.
@@ -174,13 +175,13 @@ export class StoryBoard {
     linkDataManager(dm: DataManager) {
         this._dm = dm;
         dm.isStyLinked = true;
-        this._init;
+        this._init();
     }
 
     /**
      * 데이터 매니저의 연결을 끊는다.
      */
-    unlinkDataManager(dm: DataManager) {
+    unlinkDataManager() {
         if (this._dm) {
             this._dm.isStyLinked = false;
             this._dm = null;
@@ -192,10 +193,13 @@ export class StoryBoard {
 
     private _init() {
         if (this._dm) {
+            this._parse(this._dm.storySet, this._dm.choiceSet);
+
             const defaultFlow = new Flow(this._introFlow);
             const introSty = this.findStory(this._introFlow);
             if (introSty) {
                 defaultFlow.story = introSty;
+                this._flows[this._introFlow] = defaultFlow;
             }
             else {
                 throw new Error('there is no intro story: ' + this._introFlow);
@@ -204,23 +208,24 @@ export class StoryBoard {
         else {
             throw DMNotExistErrorCore
         }
-        
     }
 
     private _parse(stories: IStories, choices: IChoices) {
         for (let name in stories) {
             const sty = this._createStory(name, stories[name]);
+            sty.text = stories[name].text;
             this._stories[name] = sty;
         }
 
         for (let name in choices) {
             const cho = this._createChoice(name, choices[name]);
+            cho.text = choices[name].text;
             this._choices[name] = cho;
         }
     }
 
     private _clear() {
-        
+
     }
 
     private _createStory(storyName: string, story: IStory) {

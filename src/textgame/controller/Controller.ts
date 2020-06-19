@@ -10,6 +10,7 @@ import { InnerExp } from "../utils/Parser";
 import { SectionType } from "../Type";
 import { DataManager } from "../data/DataManager";
 import { DMNotExistError } from "../utils/Errors";
+import { StoryBoard } from "../storyboard/StoryBoard";
 
 /**
  * 컨트롤러 클래스
@@ -18,16 +19,18 @@ export class Controller {
     private _dataManager: DataManager | null;
     private _itemManager: ItemManager;
     private _statusManager: StatusMananger;
+    private _storyBoard: StoryBoard;
+
     private _gameView: MainView;
     private _templates = {
-        item: `{{name}}x{{count}}`
+        item: `{{name}}x{{count}}`,
     }
 
     constructor(gameView: MainView) {
         this._itemManager = new ItemManager();
         this._statusManager = new StatusMananger();
+        this._storyBoard = new StoryBoard();
         this._gameView = gameView;
-        this.renderItemView();
     }
 
     /**
@@ -35,12 +38,6 @@ export class Controller {
      * 
      * @remarks
      * 각각 다음과 같은 특별 표현을 사용할 수 있다.
-     * 
-     * [공통]
-     * {{plus}} + 기호
-     * {{minus}} - 기호
-     * {{multiple}} * 기호
-     * {{division}} / 기호
      * 
      * [item]
      * {{code}} 아이템 코드
@@ -127,11 +124,14 @@ export class Controller {
      * 
      */
     renderItemView() {
+        if (!this._dataManager) {
+            throw DMNotExistError;
+        }
         // view에서 아이템 목록 초기화
         this._gameView.itemTab.removeAllChilds();
         // 데이터에서 읽어온 것으로 set
         let itemList;
-        if (this._dataManager?.multipleItemSetMode) {
+        if (this._dataManager.multipleItemSetMode) {
             itemList = this._itemManager.itemMultiList;
             for (let id in itemList) {
                 const set = itemList[id];
@@ -153,6 +153,18 @@ export class Controller {
                     this._setItemInnerHTML(name, Number(code), count);
                 }
             }
+        }
+    }
+
+    renderStoryView() {
+        if (this._dataManager) {
+            // view에서 스토리 섹션 초기화
+            const storyTab = this._gameView.storyTab;
+            storyTab.removeAllChilds();
+            this._setStoryInnerHTML();
+        }
+        else {
+            throw DMNotExistError;
         }
     }
 
@@ -190,13 +202,29 @@ export class Controller {
         }
     }
 
+    private _setStoryInnerHTML(className?: string) {
+        const storyTab = this._gameView.storyTab;
+        const sb = this._storyBoard;
+        const nowFlo = sb.now;
+        const storySection = storyTab.findChild();
+        if (storySection) {
+            storySection.setInnerHTML(nowFlo.story.text);
+        }
+        else {
+            storyTab.addChild(SectionType.STORY, nowFlo.story.text, undefined, undefined, className);
+        }
+    }
+
     /**
      * @internal
      * @param dm - 데이터 매니저
      */
     private _linkDataManager(dm: DataManager) {
         this._dataManager = dm;
+        this._storyBoard.linkDataManager(dm);
         this._itemManager.linkDataManager(dm);
+        this.renderItemView();
+        this.renderStoryView();
     }
     /**
      * @internal
@@ -204,7 +232,8 @@ export class Controller {
     private _unlinkDataManager() {
         const dm = this._dataManager
         if (dm) {
-            this._itemManager.unlinkDataManager(dm);
+            this._itemManager.unlinkDataManager();
+            this._storyBoard.unlinkDataManager();
             this._dataManager = null;
         }
     }

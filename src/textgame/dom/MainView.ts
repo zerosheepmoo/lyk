@@ -53,7 +53,14 @@ export class MainView extends Section {
      * 스테이터스 탭
      */
     get statusTab() {
-        return this._statusTab
+        return this._statusTab;
+    }
+
+    /**
+     * 스토리 탭
+     */
+    get storyTab() {
+        return this._storyTab;
     }
 
     render(): void {

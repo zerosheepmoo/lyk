@@ -9,6 +9,7 @@ import { InnerExp, ExpParser } from "../utils/Parser";
 
 export class StorySection extends Section{
 
+    
     constructor(parent: Section, type: SectionType.STORY, className?: string) {
         super(parent, type, className);
     }
@@ -40,8 +41,13 @@ export class StorySection extends Section{
         if (innerExp && (!this._innerExp || this._innerExp !== innerExp)) {
             this._innerExp = innerExp;
         }
-        let ih = ExpParser.getItemInnerHTML(this.innerHTML, this._innerExp);
-        this.dom.innerHTML = ih;
+        if (this._innerExp) {
+            let ih = ExpParser.getItemInnerHTML(this.innerHTML, this._innerExp, SectionType.STORY);
+            this.dom.innerHTML = ih;
+        }
+        else {
+            this.dom.innerHTML = this.innerHTML;
+        }
     }
 
     //// unused ////

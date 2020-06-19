@@ -37,7 +37,7 @@ export class ItemManager {
     /**
      * 데이터 매니저의 연결을 끊는다.
      */
-    unlinkDataManager(dm: DataManager) {
+    unlinkDataManager() {
         if (this._dm) {
             this._dm.isItemLinked = false;
             this._dm = null;

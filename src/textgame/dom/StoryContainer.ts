@@ -15,7 +15,11 @@ export class StoryContainer extends ContainerSection{
     constructor(parent: Section, type: SectionType.STORY_CON, className?: string) {
         super(parent, type, className);
     }
-    
+
+    findChild(): Section {
+        return this._childs[0];
+    }
+
     /**
      * 자식을 추가한다.
      * 
@@ -31,7 +35,12 @@ export class StoryContainer extends ContainerSection{
         if (template && innerExp) {
             child.setInnerHTML(template, innerExp);
         }
+        else if (template) {
+            // 표현식 없는 거
+            child.setInnerHTML(template);
+        }
         else {
+            // 표현식만 있는 거
             child.render(innerExp);
         }
         this._childs.push(child);
